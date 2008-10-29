@@ -17,7 +17,7 @@ config/newrelic.yml
 config/deploy/*
 *.sql
 public/images/pretty_text/*.*
-log/*.log
+log/*
 .DS_Store
 *.tmp
 public/stylesheets/alonetone.css
