@@ -44,7 +44,7 @@ module ThinkingSphinx
       # 
       #   User.search "pat", :include => :posts
       #
-      # == Advanced Searching
+      # == Match Modes
       #
       # Sphinx supports 5 different matching modes. By default Thinking Sphinx
       # uses :all, which unsurprisingly requires all the supplied search terms
@@ -61,6 +61,20 @@ module ThinkingSphinx
       # terms a single phrase instead of individual words. Boolean and extended allow
       # for more complex query syntax, refer to the sphinx documentation for further
       # details.
+      #
+      # == Weighting
+      #
+      # Sphinx has support for weighting, where matches in one field can be considered
+      # more important than in another. Weights are integers, with 1 as the default.
+      # They can be set per-search like this:
+      #
+      #   User.search "pat allan", :field_weights => { :alias => 4, :aka => 2 }
+      #
+      # If you're searching multiple models, you can set per-index weights:
+      #
+      #   ThinkingSphinx::Search.search "pat", :index_weights => { User => 10 }
+      #
+      # See http://sphinxsearch.com/doc.html#weighting for further details.
       #
       # == Searching by Fields
       # 
@@ -247,8 +261,9 @@ module ThinkingSphinx
         )
         client.filters   += filters
         client.match_mode = :extended unless query.empty?
-        query             = args.join(" ") + query
-        
+        query             = (args + [query]).join(' ')
+        query.strip!  # Because "" and " " are not equivalent
+                
         set_sort_options! client, options
         
         client.limit  = options[:per_page].to_i if options[:per_page]
@@ -274,6 +289,16 @@ module ThinkingSphinx
         client = Riddle::Client.new config.address, config.port
         klass  = options[:class]
         index_options = klass ? klass.sphinx_indexes.last.options : {}
+        
+        # Turn :index_weights => { "foo" => 2, User => 1 }
+        # into :index_weights => { "foo" => 2, "user_core" => 1 }
+        if iw = options[:index_weights]
+          options[:index_weights] = iw.inject({}) do |hash, (index,weight)|
+            key = index.is_a?(Class) ? "#{ThinkingSphinx::Index.name(index)}_core" : index
+            hash[key] = weight
+            hash
+          end
+        end
         
         [
           :max_matches, :match_mode, :sort_mode, :sort_by, :id_range,
@@ -332,7 +357,7 @@ module ThinkingSphinx
           index.attributes.collect { |attrib| attrib.unique_name }
         }.flatten : []
         
-        search_string = ""
+        search_string = []
         filters       = []
         
         conditions.each do |key,val|
@@ -341,11 +366,11 @@ module ThinkingSphinx
               key.to_s, filter_value(val)
             )
           else
-            search_string << "@#{key} #{val} "
+            search_string << "@#{key} #{val}"
           end
         end
         
-        return search_string, filters
+        return search_string.join(' '), filters
       end
       
       # Return the appropriate latitude and longitude values, depending on

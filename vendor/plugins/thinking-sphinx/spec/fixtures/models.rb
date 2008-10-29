@@ -59,6 +59,8 @@ end
 class Alpha < ActiveRecord::Base
   define_index do
     indexes :name, :sortable => true
+    
+    set_property :field_weights => {"name" => 10}
   end
 end
 
@@ -68,4 +70,14 @@ class Beta < ActiveRecord::Base
     
     set_property :delta => true
   end
+end
+
+class Animal < ActiveRecord::Base
+  define_index do
+    indexes name, :sortable => true
+  end
+end
+
+class Cat < Animal
+  #
 end
