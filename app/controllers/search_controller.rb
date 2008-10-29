@@ -9,6 +9,12 @@ class SearchController < ApplicationController
     end
   end
   
+  def search
+    @query = params[:q]
+    @results = ["1", "2", "3"]
+    render :partial => "results"
+  end
+  
   protected
   
   def deliver_results

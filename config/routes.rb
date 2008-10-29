@@ -83,8 +83,9 @@ ActionController::Routing::Routes.draw do |map|
      playlist.resources :comments
    end
   end
-  map.search 'search', :controller => 'search', :action => 'index'
+  map.search 'search', :controller => 'search', :action => 'search'
   map.search_query 'search/:query', :controller => 'search', :action => 'index'
+  
   map.namespace(:admin) do |admin|
     admin.resources :layouts
     admin.resources :users
