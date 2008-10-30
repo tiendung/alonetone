@@ -1,2 +1,5 @@
 <h3>Results for "<%= h @query %>"</h3>
-<%= @results.join("<br />") %>
+
+<%= render :partial => 'shared/user', :collection => @users unless @users.blank? %>
+
+<%= render :partial => 'assets/asset', :collection => @assets  unless @assets.blank? %>

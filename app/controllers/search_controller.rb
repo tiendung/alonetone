@@ -1,7 +1,6 @@
 class SearchController < ApplicationController
-  before_filter :deliver_results
-  
   def index
+    deliver_results
     respond_to do |wants| 
       wants.html
       wants.js
@@ -11,7 +10,8 @@ class SearchController < ApplicationController
   
   def search
     @query = params[:q]
-    @results = ["1", "2", "3"]
+    @users = User.search(@query)
+    # @assets = Asset.search(@query)
     render :partial => "results"
   end
   
