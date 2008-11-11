@@ -10,6 +10,13 @@ class SearchController < ApplicationController
   
   def search
     @query = params[:q]
+    user = User.find_by_login(@query)
+    
+    unless user.nil?
+      redirect_to user_path(user)
+      return
+    end
+    
     @users = User.search(@query)
     @assets = Asset.search(@query)
     render :partial => "results"
