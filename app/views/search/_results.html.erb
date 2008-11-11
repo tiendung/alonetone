@@ -1,5 +1,16 @@
+<form action="/search">
+	<input type="text" name="q" />
+	<input type="submit" value="search" />
+</form>
+
 <h3>Results for "<%= h @query %>"</h3>
 
-<%= render :partial => 'shared/user', :collection => @users unless @users.blank? %>
+<% unless @users.blank? %>
+	<h4> Users </h4>
+	<%= render :partial => 'shared/user', :collection => @users %>
+<% end %>
 
-<%= render :partial => 'assets/asset', :collection => @assets  unless @assets.blank? %>
+<% unless @assets.blank? %>
+	<h4> Assests </h4>
+	<%= render :partial => 'assets/asset', :collection => @assets %>
+<% end %>

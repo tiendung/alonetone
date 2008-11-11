@@ -1,11 +1,17 @@
 ##
-# SphinxSearch Installation
+# Sphinx Installation
+##
 # wget http://sphinxsearch.com/downloads/sphinx-0.9.8.1.tar.gz
 # tar vxfz sphinx-0.9.8.1.tar.gz
 # cd sphinx-0.9.8.1
 # ./configure
 # make
 # sudo make install
+
+##
+# Remember to run following command to index data and start sphinx deamon
+# rake ts:in
+# rake ts:start
 
 ##
 # Indexing
@@ -34,6 +40,7 @@ end
 
 ##
 # Searching
+# Unify search interface if needed
 class SphinxSearch
   def search(query)
     
