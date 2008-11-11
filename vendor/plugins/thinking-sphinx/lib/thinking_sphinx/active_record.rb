@@ -83,6 +83,10 @@ module ThinkingSphinx
           end
           alias_method :sphinx_index, :define_index
           
+          def sphinx_index_options
+            sphinx_indexes.last.options
+          end
+          
           # Generate a unique CRC value for the model's name, to use to
           # determine which Sphinx documents belong to which AR records.
           # 
@@ -155,6 +159,8 @@ module ThinkingSphinx
       ) if ThinkingSphinx.deltas_enabled? &&
         self.class.sphinx_indexes.any? { |index| index.delta? } &&
         self.delta?
+    rescue ::ThinkingSphinx::ConnectionError
+      # nothing
     end
     
     def sphinx_document_id

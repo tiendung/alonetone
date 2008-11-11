@@ -1,4 +1,13 @@
 ##
+# SphinxSearch Installation
+# wget http://sphinxsearch.com/downloads/sphinx-0.9.8.1.tar.gz
+# tar vxfz sphinx-0.9.8.1.tar.gz
+# cd sphinx-0.9.8.1
+# ./configure
+# make
+# sudo make install
+
+##
 # Indexing
 class Asset < ActiveRecord::Base
   define_index do

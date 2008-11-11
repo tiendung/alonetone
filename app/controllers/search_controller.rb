@@ -11,7 +11,7 @@ class SearchController < ApplicationController
   def search
     @query = params[:q]
     @users = User.search(@query)
-    # @assets = Asset.search(@query)
+    @assets = Asset.search(@query)
     render :partial => "results"
   end
   
